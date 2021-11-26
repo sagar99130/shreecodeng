@@ -1,0 +1,68 @@
+import { ApiService } from 'src/app/services/api.service';
+import { LocalService } from 'src/app/services/local.service';
+import { AppHelperService } from 'src/app/services/app-helper.service';
+import { Router, ActivatedRoute } from '@angular/router';	
+
+
+  constructor
+(	
+     public appService: AppService, 
+     private route: Router, 
+     private activatedRoute: ActivatedRoute,
+     public apiservice: ApiService,
+     private localService: LocalService, 
+     public appHelper: AppHelperService
+
+) { 
+}
+
+
+
+
+getOrderDetails() {
+    this.apiService.callapi('order/get-order-detail/' + this.orderId, '', 'GET', "", false, "CRM")
+    .subscribe((res) => {
+      console.info('res', res);
+
+      if (res.status == "success") {
+        this.orderDetails = res.data;
+      }
+    }, (err) => {
+      console.log(err)
+    });
+  }
+
+
+
+  onClickResendOtp(){
+    this.resendCount++;
+    this.max_otp_send --;
+        let parameter = {
+          'mobile_number': this.mobileNumber,
+          'from_where': 'APP',
+	          'client_secret': 'tuEMy7H025R2IkQUBMwx77L6ONqN27hVfHdM4KRh'
+        }
+        this.apiService.callapi('resend-otp', parameter, 'POST', "", false, "CRM").subscribe
+        ((resendotp) => {
+          if (resendotp.status == "success") {
+            this.snackBar.open(resendotp.message, '×', { duration: 3000 });
+          }
+        }, (err) => {
+          console.log(err)
+        })
+      }
+
+
+ if (dialogResult) {
+        this.apiservice.callapi('cart/remove-cart/' + cart_id, '', 'DELETE', "", false, "CRM").subscribe((res: any) => {
+          if (res.status == 'success') {
+            this.appHelper.userCartItem('minus');
+            this.page = this.defaultPage;
+            this.getCarts();
+            this.snackBar.open(res.message, '×', { duration: 3000 });
+          }
+
+        }, (err) => {
+          console.log(err)
+        })
+      }
