@@ -16,6 +16,22 @@ import { Router, ActivatedRoute } from '@angular/router';
 ) { 
 }
 
+if (islistingMoq) {
+      var params = {
+        seller_user_id: this.sellerUserId,
+        seller_cluster_id: this.sellerClusterId,
+        product: final_product
+      }
+      this.apiservice.callapi('cart/add-edit-cart', params, 'POST', "", false, "CRM").subscribe((res: any) => {
+        if (res.status == 'success') {
+          this.snackBar.open(res.message, '×', { duration: 2000 });
+          this.route.navigate(['cart/review-and-order/'+this.cartId]); 
+        } else {
+          this.snackBar.open(res.message, '×', { duration: 2000 });
+          this.route.navigate(['/']);
+        }
+      });
+    }
 
 
 
@@ -45,7 +61,7 @@ getOrderDetails() {
         this.apiService.callapi('resend-otp', parameter, 'POST', "", false, "CRM").subscribe
         ((resendotp) => {
           if (resendotp.status == "success") {
-            this.snackBar.open(resendotp.message, '�', { duration: 3000 });
+            this.snackBar.open(resendotp.message, '×', { duration: 3000 });
           }
         }, (err) => {
           console.log(err)
@@ -59,7 +75,7 @@ getOrderDetails() {
             this.appHelper.userCartItem('minus');
             this.page = this.defaultPage;
             this.getCarts();
-            this.snackBar.open(res.message, '�', { duration: 3000 });
+            this.snackBar.open(res.message, '×', { duration: 3000 });
           }
 
         }, (err) => {
